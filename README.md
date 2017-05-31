@@ -7,19 +7,17 @@ A simple parser of .INI files.
 #### Example .INI file
 
 ```
-
 [Options]
 iVar = 1234
 sVar = some_text
 fVar = 1.234
 bVar = false
-
 ```
 
 #### Reading .INI file in C++
 
 ```
-#include <"ini_reader.hpp"
+#include "ini_reader.hpp"
 
 ...
 
@@ -31,5 +29,4 @@ float fVar = ini_file.Read<float>("Options", "fVar");
 bool bVar = ini_file.Read<bool>("Options", "bVar");
 
 ini_file.Close();
-
 ```
