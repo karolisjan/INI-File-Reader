@@ -8,22 +8,22 @@
 
 using namespace std;
 
-class iniReader
+class IniReader
 {
 public:
-	iniReader(string filename) 
+	IniReader(string filename) 
 	{
-		ifstream configFile(filename, ios::in);
+		file = ifstream(filename, ios::in);
 
-		if (!configFile.is_open()) 
-			throw runtime_error("Config.ini was not found!");
+		if (!file.is_open())
+			throw runtime_error(filename + " was not found!");
 
 		lpFilename = new wchar_t[filename.length() + 1];
 		copy(filename.begin(), filename.end(), lpFilename);
 		lpFilename[filename.length()] = '\0';
 	}
 
-	~iniReader() { delete lpFilename; };
+	~IniReader() { delete lpFilename; };
 
 	template<typename I> 
 	I Read(string section, string key)
@@ -114,8 +114,12 @@ public:
 			throw runtime_error(errMsg);
 		}
 		else {
-			if (returnedString == "true" || returnedString == "1") return true;
-			else if (returnedString == "false" || returnedString == "0") return false;
+			if (returnedString == "true" || returnedString == "1") {
+				return true;
+			}
+			else if (returnedString == "false" || returnedString == "0") {
+				return false;
+			}
 			else {
 				string errMsg = section + '.' + key + " holds an invalid value!";
 				throw runtime_error(errMsg);
@@ -132,8 +136,16 @@ public:
 			string errMsg = section + '.' + key + " was not found!";
 			throw runtime_error(errMsg);
 		}
-		else
+		else {
 			return string(returnedString.begin(), returnedString.end());
+		}
+	}
+
+	void Close()
+	{
+		if (file.is_open()) {
+			file.close();
+		}
 	}
 
 private:
@@ -160,6 +172,7 @@ private:
 		return returnedString;
 	}
 
+	ifstream file;
 	LPWSTR lpFilename;
 	const DWORD bufferSize = 256;
 	LPWSTR lpDefault = L"NOT FOUND\0";
